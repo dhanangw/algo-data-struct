@@ -52,6 +52,11 @@ class LinkedList {
         Node current = head;
         Node previous = head;
         for (int i = 0; i < position - 1; i++) {
+            if (current.next == null) {
+                // arrives at last node, and position is beyond last node.
+                previous.next = null;
+                return;
+            }
             // traverse to position to delete
             previous = current;
             current = current.next;
@@ -106,7 +111,7 @@ class LinkedList {
         insertToLinkedListAtPosition(3, 2);
         insertToLinkedListAtPosition(5, 1);
         deleteNodeInPosition(4);
-        deleteNodeInPosition(1);
+        deleteNodeInPosition(9);
         reverseLinkedListRecursion(head);
         printLinkedList();
     }
