@@ -1,3 +1,4 @@
+# NOTE: only works with single digit numbers
 class LinkedListStack:
     class Node:
         def __init__(self, value: int) -> None:
@@ -29,9 +30,17 @@ class LinkedListStack:
             pointer = pointer.next
 
 class PostfixPrefixEvaluator():
-    def __init__(self):
-        self.stack = LinkedListStack()
-    
+    def has_higher_precendence(self, operator1: str, operator2: str) -> bool:
+        """
+        make sure whether operator1 has higher order of operation than operator2
+        """
+        # order or operation
+        # 1. parentheses (){}[]
+        # 2. exponents right to left
+        # 3. multiplication and division left to right
+        # 4. addition and substraction left to right
+        # TODO implement this function, see `order of operation`
+
     def operate(self, operand1: int, operand2: int, operator: str) -> int:
         result = None
         if operator == '+':
@@ -42,6 +51,36 @@ class PostfixPrefixEvaluator():
             return operand1 * operand2
         if operator == '/':
             return int(operand1 / operand2)
+    
+    def infix_to_postfix(self, infix_expression: str) -> str:
+        # TODO: continue implementing this function
+        # create an empty stack
+        operator_stack = LinkedListStack()
+        # create an empty result string
+        result = ''
+        # for each characters in infix_expression:
+        for i in range(0, len(infix_expression) - 1):
+            character = infix_expression(i)
+            if character not in ('+', '-', '*', '/'):
+                # if character is operand -> append character to result string
+                result += character
+            else:
+                # else if character is an operator:
+                while not stack.is_empty() and self.has_higher_precedence(character, stack.top()):
+
+
+        # while stack is not empty and character has higher precedence than top of stack,
+        # append result string with top of stack,
+        # pop top of stack
+        # end while
+        # push character to stack.
+        # end for
+
+        # while stack is not empty
+        # push top of stack to result string
+        # end while
+
+
 
     
     def is_postfix_valid(self, postfix_expression: str) -> bool:
@@ -50,15 +89,16 @@ class PostfixPrefixEvaluator():
         # else if operator, get 2 recent operand from stack and operate with operator
         # if expression is looped, and stack is empty then expression is valid. else expression is unvalid.
         try:
+            stack = LinkedListStack()
             for i in range(0, len(postfix_expression)):
                 char = postfix_expression[i]
                 if char not in {'+', '-', '*', '/'}:
-                    self.stack.push(int(char))
+                    stack.push(int(char))
                 elif char in {'+', '-', '*', '/'}:
-                    operand1 = self.stack.pop().value
-                    operand2 = self.stack.pop().value
+                    operand1 = stack.pop().value
+                    operand2 = stack.pop().value
                     result = self.operate(operand1, operand2, char)
-                    self.stack.push(result)
+                    stack.push(result)
             return True
         except ValueError as e:
             if str(e) == 'stack is empty':
@@ -70,15 +110,16 @@ class PostfixPrefixEvaluator():
         # else if operator, get 2 recent operand from stack and operate with operator
         # if expression is looped, and stack is empty then expression is valid. else expression is unvalid.
         try:
+            stack = LinkedListStack()
             for i in range(len(prefix_expression) - 1, -1, -1):
                 char = prefix_expression[i]
                 if char not in {'+', '-', '*', '/'}:
-                    self.stack.push(int(char))
+                    stack.push(int(char))
                 elif char in {'+', '-', '*', '/'}:
-                    operand1 = self.stack.pop().value
-                    operand2 = self.stack.pop().value
+                    operand1 = stack.pop().value
+                    operand2 = stack.pop().value
                     result = self.operate(operand1, operand2, char)
-                    self.stack.push(result)
+                    stack.push(result)
             return True
         except ValueError as e:
             if str(e) == 'stack is empty':
