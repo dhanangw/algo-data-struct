@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 class BinarySearchTree{
     private class Node{
         int value;
@@ -57,6 +60,34 @@ class BinarySearchTree{
         }
     }
 
+    public int findHeight(Node node){
+        if (node == null){
+            return -1;
+        }
+        int leftHeight = findHeight(node.left);
+        int rightHeight = findHeight(node.right);
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+
+    public void levelOrderTraversal(Node node){
+        if (node == null){
+            return;
+        }
+
+        Queue<Node> discoveredNodesQueue = new LinkedList<Node>();
+        discoveredNodesQueue.add(node);
+        while(!discoveredNodesQueue.isEmpty()){
+            Node visitedNode = discoveredNodesQueue.poll();
+            System.out.print(visitedNode.value + " ");
+            if (visitedNode.left != null){
+                discoveredNodesQueue.add(visitedNode.left);
+            } 
+            if (visitedNode.right != null){
+                discoveredNodesQueue.add(visitedNode.right);
+            }
+        }
+    }
+
     public static void main(String[] args){
         Node root = null;
         BinarySearchTree bst = new BinarySearchTree();
@@ -66,9 +97,10 @@ class BinarySearchTree{
         root = bst.insert(root, 25);
         root = bst.insert(root, 8);
         root = bst.insert(root, 12);
-        root = bst.insert(root, 120);
-        System.out.println("search result: " + bst.search(root, 12));
-        System.out.println("min value: " + bst.findMin(root));
-        System.out.println("max value: " + bst.findMax(root));
+        // System.out.println("search result: " + bst.search(root, 12));
+        // System.out.println("min value: " + bst.findMin(root));
+        // System.out.println("max value: " + bst.findMax(root));
+        System.out.println("level order traversal: ");
+        bst.levelOrderTraversal(root);
     }
 }
