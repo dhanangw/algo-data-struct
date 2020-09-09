@@ -85,7 +85,34 @@ class BinarySearchTree{
             if (visitedNode.right != null){
                 discoveredNodesQueue.add(visitedNode.right);
             }
+        };
+    }
+
+    public void preorderTraversal(Node node){
+        if (node == null){
+            return;
         }
+        System.out.print(node.value + " ");
+        preorderTraversal(node.left);
+        preorderTraversal(node.right);
+    }
+
+    public void inorderTraversal(Node node){
+        if (node == null){
+            return;
+        }
+        inorderTraversal(node.left);
+        System.out.print(node.value + " ");
+        inorderTraversal(node.right);
+    }
+
+    public void postorderTraversal(Node node) {
+        if (node == null) {
+            return;
+        }
+        inorderTraversal(node.left);
+        inorderTraversal(node.right);
+        System.out.print(node.value + " ");
     }
 
     public static void main(String[] args){
@@ -100,7 +127,13 @@ class BinarySearchTree{
         // System.out.println("search result: " + bst.search(root, 12));
         // System.out.println("min value: " + bst.findMin(root));
         // System.out.println("max value: " + bst.findMax(root));
-        System.out.println("level order traversal: ");
-        bst.levelOrderTraversal(root);
+        // System.out.println("level order traversal: ");
+        // bst.levelOrderTraversal(root);
+        // System.out.println("preorder traversal : ");
+        // bst.preorderTraversal(root);
+        // System.out.println("inorder traversal : ");
+        // bst.inorderTraversal(root);
+        System.out.println("postorder traversal : ");
+        bst.postorderTraversal(root);
     }
 }
