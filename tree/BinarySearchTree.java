@@ -115,6 +115,31 @@ class BinarySearchTree{
         System.out.print(node.value + " ");
     }
 
+    Node previousNodeIsBinarySearchTree;
+
+    public boolean isBinarySearchTree(Node node){
+        /*
+        do inorder traversal,
+        saves previousNode,
+        if currentNode.value <= previousNode.value then not an BST.
+        else is an BST.
+        */
+        if (node == null){
+            return true;
+        }
+        if (isBinarySearchTree(node.left) == false){
+            return false;
+        }
+
+        if (previousNodeIsBinarySearchTree != null
+                && node.value <= previousNodeIsBinarySearchTree.value){
+            return false;
+        }
+        previousNodeIsBinarySearchTree = node;
+
+        return isBinarySearchTree(node.right);
+    }
+
     public static void main(String[] args){
         Node root = null;
         BinarySearchTree bst = new BinarySearchTree();
@@ -133,7 +158,8 @@ class BinarySearchTree{
         // bst.preorderTraversal(root);
         // System.out.println("inorder traversal : ");
         // bst.inorderTraversal(root);
-        System.out.println("postorder traversal : ");
-        bst.postorderTraversal(root);
+        // System.out.println("postorder traversal : ");
+        // bst.postorderTraversal(root);
+        System.out.println(bst.isBinarySearchTree(root));
     }
 }

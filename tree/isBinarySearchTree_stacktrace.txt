@@ -1,0 +1,33 @@
+        5
+    3       7
+  1   4   6   8
+
+isBinarySearchTree(5):
+    isBinarySearchTree(5.left -> 3);
+        isBinarySearchTree(3.left -> 1):
+            isBinarySearchTree(1.left -> null):
+                return true;
+            previousNode = 1;
+            isBinarySearchTree(1.right -> null):
+                return true;
+        previousNode = 3;
+        isBinarySearchTree(3.right -> 4):
+            previousNode = 4;
+            isBinarySearchTree(4.right -> null):
+                return true;
+    previousNode = 5;
+    isBinarySearchTree(5.right -> 7):
+        isBinarySearchTree(7.left -> 6):
+            isBinarySearchTree(6.left -> null):
+                return true;
+            previousNode = 6;
+            isBinarySearchTree(6.right -> null):
+                return true
+        previousNode = 7;
+        isBinarySearchTree(7.right -> 8):
+            isBinarySearchTree(8.left -> null):
+                return true;
+            previousNode = 8;
+            isBinarySearchTree(8.right -> null):
+                return true;
+    true;
