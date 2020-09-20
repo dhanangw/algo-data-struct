@@ -38,25 +38,25 @@ class BinarySearchTree{
         }
     }
 
-    public int findMin(Node node){
+    public int findMinValue(Node node){
         if (node == null){
             System.out.println("tree is empty!");
             return -1;
         } else if (node.left == null){
             return node.value;
         } else {
-            return findMin(node.left);
+            return findMinValue(node.left);
         }
     }
 
-    public int findMax(Node node){
+    public int findMaxValue(Node node){
         if (node == null){
             System.out.println("tree is empty!");
             return -1;
         } else if (node.right == null){
             return node.value;
         } else {
-            return findMax(node.right);
+            return findMaxValue(node.right);
         }
     }
 
@@ -140,7 +140,51 @@ class BinarySearchTree{
         return isBinarySearchTree(node.right);
     }
 
+    public Node deleteNode(Node node, int value){
+        if (node == null){
+            return node;
+        } 
+        else if (node.value < value){
+            node.right = deleteNode(node.right, value);
+        } 
+        else if (node.value > value){
+            node.left = deleteNode(node.left, value);
+        } 
+        else { // node-to-be-deleted has been found.
+            // case 1: node-to-be-deleted has no childs.
+            if (node.left == null && node.right == null){
+                node = null;
+            }
+            // case 2: node-to-be-deleted only has 1 child.
+            else if (node.left != null && node.right == null){
+                node = node.left;
+            }
+            else if  (node.left == null && node.right != null){
+                node = node.right;
+            }
+            // case 3: node-to-be-deleted has 2 childs.
+            else if (node.left != null && node.right != null){
+                // find node with max value in left subtree.
+                // or find node with min value in right subtree.
+                // replace node-to-be-deleted's value with min/max value.
+                // delete original min/max value.
+                int maxOfLeft = findMaxValue(node.left);
+                node.value = maxOfLeft;
+                node.left = deleteNode(node.left, maxOfLeft);
+            }
+        }
+        return node;
+    }
+
     public static void main(String[] args){
+        /**
+         * test BinarySearchTree with this tree.
+         *       15
+         *     /    \
+         *   10      20
+         *  /  \       \
+         * 8    12      25
+         */
         Node root = null;
         BinarySearchTree bst = new BinarySearchTree();
         root = bst.insert(root, 15);
@@ -150,8 +194,8 @@ class BinarySearchTree{
         root = bst.insert(root, 8);
         root = bst.insert(root, 12);
         // System.out.println("search result: " + bst.search(root, 12));
-        // System.out.println("min value: " + bst.findMin(root));
-        // System.out.println("max value: " + bst.findMax(root));
+        // System.out.println("min value: " + bst.findMinValue(root));
+        // System.out.println("max value: " + bst.findMaxValue(root));
         // System.out.println("level order traversal: ");
         // bst.levelOrderTraversal(root);
         // System.out.println("preorder traversal : ");
@@ -160,6 +204,8 @@ class BinarySearchTree{
         // bst.inorderTraversal(root);
         // System.out.println("postorder traversal : ");
         // bst.postorderTraversal(root);
-        System.out.println(bst.isBinarySearchTree(root));
+        // System.out.println(bst.isBinarySearchTree(root));
+        root = bst.deleteNode(root, 10);
+        bst.inorderTraversal(root); // result should be: 8 12 15 20 25
     }
 }
