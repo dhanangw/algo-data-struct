@@ -26,15 +26,15 @@ class BinarySearchTree{
         return node;
     }
 
-    public boolean search(Node node, int target_value){
+    public boolean is_exists(Node node, int target_value){
         if (node == null){
             return false; 
         } else if (node.value == target_value){
             return true;
         } else if (target_value <= node.value){
-            return search(node.left, target_value);
+            return is_exists(node.left, target_value);
         } else {
-            return search(node.right, target_value);
+            return is_exists(node.right, target_value);
         }
     }
 
@@ -176,6 +176,45 @@ class BinarySearchTree{
         return node;
     }
 
+    public Node findNode(Node root, int value){
+        if (root == null){
+            return null;
+        } else if(root.value == value){
+            return root;
+        } else if (root.value <= value){
+            return findNode(root.right, value);
+        } else {
+            return findNode(root.left, value);
+        }
+    }
+
+    public int inorderSuccessor(Node node, int value){
+        // Go to the node with value.
+        Node startNode = findNode(node, value);
+        if (startNode.right != null){
+            // case 1: node has right subtree: find min node in right subtree
+            return findMinValue(startNode.right);
+        } else {
+            // case 2: node has no right subtree: go to nearest ancestor for which given node would be in left subtree.
+            Node successor = null;
+            Node ancestor = node;
+            while (ancestor != startNode){
+                if (startNode.value <= ancestor.value) {
+                    successor = ancestor;
+                    ancestor = ancestor.left;
+                } else {
+                    ancestor = ancestor.right;
+                }
+            }
+            if (successor != null){
+                return successor.value;
+            } else {
+                // successor not found, return -1.
+                return -1;
+            }
+        }
+    }
+
     public static void main(String[] args){
         /**
          * test BinarySearchTree with this tree.
@@ -193,7 +232,7 @@ class BinarySearchTree{
         root = bst.insert(root, 25);
         root = bst.insert(root, 8);
         root = bst.insert(root, 12);
-        // System.out.println("search result: " + bst.search(root, 12));
+        // System.out.println("search result: " + bst.is_exists(root, 12));
         // System.out.println("min value: " + bst.findMinValue(root));
         // System.out.println("max value: " + bst.findMaxValue(root));
         // System.out.println("level order traversal: ");
@@ -205,7 +244,11 @@ class BinarySearchTree{
         // System.out.println("postorder traversal : ");
         // bst.postorderTraversal(root);
         // System.out.println(bst.isBinarySearchTree(root));
-        root = bst.deleteNode(root, 10);
-        bst.inorderTraversal(root); // result should be: 8 12 15 20 25
+        // root = bst.deleteNode(root, 10);
+        // bst.inorderTraversal(root); // result should be: 8 12 15 20 25
+        System.out.println(bst.inorderSuccessor(root, 8)); // result should be: 10
+        System.out.println(bst.inorderSuccessor(root, 15)); // result should be: 20
+        System.out.println(bst.inorderSuccessor(root, 20)); // result should be: 25
+        System.out.println(bst.inorderSuccessor(root, 25)); // result should be: null
     }
 }
