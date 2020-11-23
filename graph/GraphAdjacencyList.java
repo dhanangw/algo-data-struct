@@ -34,6 +34,28 @@ class GraphAdjacencyList{
         System.out.print('}');
     }
 
+    public void breadthFirstSearch(int startNode){
+        boolean[] visitedNodes = new boolean[this.numOfNodes];
+        Queue<Integer> queue = new LinkedList<Integer>();
+
+        visitedNodes[startNode] = true;
+        queue.add(startNode);
+
+        while(queue.size() != 0){
+            int currentNode = queue.poll();
+            System.out.print(currentNode + ", ");
+            ArrayList<Integer> connectedNodes = this.graph.get(currentNode);
+
+            for (int i = 0; i < connectedNodes.size(); i++){
+                int node = connectedNodes.get(i);
+                if (!visitedNodes[node]){
+                    visitedNodes[node] = true;
+                    queue.add(node);
+                }
+            }
+        }
+    }
+
     public static void main(String[] args){
         GraphAdjacencyList graph = new GraphAdjacencyList(3, true);
         graph.addNode();
@@ -41,6 +63,7 @@ class GraphAdjacencyList{
         graph.addNode();
         graph.addEdge(0, 1);
         graph.addEdge(1, 2);
-        graph.printGraph();
+        // graph.printGraph();
+        graph.breadthFirstSearch(1);
     }
 }
