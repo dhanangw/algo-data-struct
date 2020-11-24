@@ -5,11 +5,13 @@ class GraphAdjacencyList{
     ArrayList<ArrayList<Integer>> graph;
     int numOfNodes;
     boolean isUndirected;
+    boolean[] visitedNodes;
 
     public GraphAdjacencyList(int numOfNodes, boolean isUndirected){
         this.graph = new ArrayList<ArrayList<Integer>>(numOfNodes);
         this.numOfNodes = numOfNodes;
         this.isUndirected = isUndirected;
+        this.visitedNodes = new boolean[numOfNodes];
     }
 
     public void addNode() {
@@ -56,6 +58,19 @@ class GraphAdjacencyList{
         }
     }
 
+    public void depthFirstSearch(int node){
+        System.out.print(node + ", ");
+        visitedNodes[node] = true;
+
+        ArrayList<Integer> adjacentNodes = this.graph.get(node);
+        for (int i = 0; i < adjacentNodes.size(); i++){
+            int currentNode = adjacentNodes.get(i);
+            if (!visitedNodes[currentNode]){
+                depthFirstSearch(currentNode);
+            }
+        }
+    }
+
     public static void main(String[] args){
         GraphAdjacencyList graph = new GraphAdjacencyList(3, true);
         graph.addNode();
@@ -64,6 +79,7 @@ class GraphAdjacencyList{
         graph.addEdge(0, 1);
         graph.addEdge(1, 2);
         // graph.printGraph();
-        graph.breadthFirstSearch(1);
+        // graph.breadthFirstSearch(1);
+        graph.depthFirstSearch(1);
     }
 }
