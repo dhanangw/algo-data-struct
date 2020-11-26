@@ -3,10 +3,10 @@
 import java.util.*;
 
 
-public class HashTable {
+public class HashTableChaining {
     ArrayList<ArrayList<Integer>> hashTable;
     
-    public HashTable(int numOfNodes){
+    public HashTableChaining(int numOfNodes){
         this.hashTable = new ArrayList<ArrayList<Integer>>();
         for (int i = 0; i < numOfNodes; i++){
             ArrayList<Integer> chain = new ArrayList<Integer>();
@@ -32,12 +32,29 @@ public class HashTable {
         }
     }
 
+    public boolean searchValue(int value){
+        boolean isFound = false;
+        int hashKey = hashFunction(value);
+        ArrayList<Integer> row = this.hashTable.get(hashKey);
+        for (int i = 0; i < row.size(); i++){
+            if (row.get(i) == value){
+                isFound = true;
+                break;
+            }
+        }
+        return isFound;
+    }
+
     public static void main (String[] args){
-        HashTable hashTable = new HashTable(5);
+        HashTableChaining hashTable = new HashTableChaining(5);
         hashTable.insertToHashTable(110);
         hashTable.insertToHashTable(12);
         hashTable.insertToHashTable(1);
+        hashTable.insertToHashTable(1200);
         hashTable.printHashTable();
+        System.out.println(hashTable.searchValue(1));
+        System.out.println(hashTable.searchValue(1200));
+        System.out.println(hashTable.searchValue(100));
     }
     
 }
