@@ -13,7 +13,7 @@ public class HashTableOpenAddressingLinearProbing {
     }
 
     public int hashFunction(int value){
-        return value % 10;
+        return value % this.hashTable.length;
     }
 
     public void insert(int value){
