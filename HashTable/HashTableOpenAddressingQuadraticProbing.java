@@ -1,8 +1,6 @@
 
-// Hash Table with linear probing open addressing 
+// Hash Table with Quadratic probing open addressing 
 // collision avoidance.
-import java.util.Arrays;
-
 public class HashTableOpenAddressingQuadraticProbing {
     int[] hashTable;
 
