@@ -15,8 +15,8 @@
 
 import java.util.*;
 
-// 1st submission
-class Solution {
+// 1st submission uses Hash Table.
+class Solution1 {
     public List<Integer> arraysIntersection(int[] arr1, int[] arr2, int[] arr3) {
         int minLength = Math.min(arr1.length, Math.min(arr2.length, arr3.length));
         List<Integer> result = new ArrayList<Integer>();
@@ -56,6 +56,38 @@ class Solution {
         
         // sort
         Collections.sort(result);
+        return result;
+    }
+}
+
+import java.util.*;
+
+
+// Solution 2 uses three pointers
+class Solution2 {
+    public List<Integer> arraysIntersection(int[] arr1, int[] arr2, int[] arr3) {
+        int pointer1 = 0;
+        int pointer2 = 0;
+        int pointer3 = 0;
+        List<Integer> result = new ArrayList<Integer>();
+
+        while (pointer1 < arr1.length && pointer2 < arr2.length && pointer3 < arr3.length) {
+            if (arr1[pointer1] == arr2[pointer2] && arr2[pointer2] == arr3[pointer3]) {
+                result.add(arr1[pointer1]);
+                pointer1 += 1;
+                pointer2 += 1;
+                pointer3 += 1;
+            } else if (arr1[pointer1] <= arr2[pointer2] && arr1[pointer1] <= arr3[pointer3]) {
+                // if min is in arr1, increment pointer1
+                pointer1 += 1;
+            } else if (arr2[pointer2] <= arr3[pointer3] && arr2[pointer2] <= arr1[pointer1]) {
+                pointer2 += 1;
+                // if min is in arr2, increment pointer2
+            } else {
+                // increment pointer3
+                pointer3 += 1;
+            }
+        }
         return result;
     }
 }
