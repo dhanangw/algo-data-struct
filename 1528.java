@@ -30,7 +30,11 @@ import java.util.Hashtable;
 import java.util.Arrays;
 
 
-class Solution {
+class Solution1 {
+    /**
+     * time = O(n)
+     * space = O(n)
+     */
     public String restoreString(String s, int[] indices) {
         Hashtable<Integer, Character> hashTable = new Hashtable<Integer, Character>();
         StringBuilder output = new StringBuilder();
@@ -49,5 +53,20 @@ class Solution {
         }
         
         return output.toString();
+    }
+}
+
+class Solution2 {
+    /**
+     * time = O(n) 
+     * space = O(n)
+     * but faster as we only loop once.
+     */
+    public String restoreString(String s, int[] indices) {
+        char[] output = new char[indices.length];
+        for (int i = 0; i < indices.length; i++){
+            output[indices[i]] = s.charAt(i);
+        }
+        return new String(output);
     }
 }
