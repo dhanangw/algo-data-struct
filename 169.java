@@ -44,3 +44,25 @@
         return count;
     }
 }
+
+class Solution {
+    public int maxSubArray(int[] nums) {
+        // Use greedy approach
+        int globalSum = nums[0];
+        int localSum = nums[0];
+        
+        for (int i = 1; i < nums.length; ++i){
+            // Iterate through the array.
+            // If current element is greater than previous element,
+            // set beginning of maxSubArray to current element and count localSum.
+            // Keeps adding element to localSum until we found element greater than localSum.
+            // If we found element greater than localSum, re-initiate localSum.
+            localSum = Math.max(nums[i], localSum + nums[i]);
+            
+            // If localSum greater than globalSum, set globalSum to localSum.
+            globalSum = Math.max(localSum, globalSum);
+        }
+        
+        return globalSum;
+    }
+}
