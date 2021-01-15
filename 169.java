@@ -66,3 +66,23 @@ class Solution {
         return globalSum;
     }
 }
+
+class Solution {
+    public int maxSubArray(int[] nums) {
+        // use dynamic programming: Kadane's algorithm
+        int localSum = nums[0];
+        int globalSum = nums[0];
+        
+        for(int i = 1; i < nums.length; ++i){
+            // localSum in i = nums[i] + localSum for n-1.
+            localSum = Math.max(nums[i], localSum + nums[i]);
+            
+            // keep track of localSum using globalSum.
+            if (globalSum < localSum){
+                globalSum = localSum;
+            }
+        }
+        
+        return globalSum;
+    }
+}
