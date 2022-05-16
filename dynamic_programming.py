@@ -1,12 +1,10 @@
-from typing import Dict
+from typing import Dict, List
 
 
 def fibonacci(n: int) -> int:
     """Returns n-th fibonacci number.
 
     Uses regular recursion.
-    Time: O(2^n) for each recursive level, we call fibonacci() twice.
-    space: O(n) maximum recursion depth is n.
 
     Example:
         fib(0) returns 0.
@@ -16,6 +14,11 @@ def fibonacci(n: int) -> int:
         fib(4) returns 3.
         fib(5) returns 5.
         fib(6) returns 8.
+
+    Time Complexity:
+        O(2^n) for each recursive level, we call fibonacci() twice.
+    Space Complexity:
+        O(n) maximum recursion depth is n.
     """
     if n == 0:
         return 0
@@ -34,8 +37,10 @@ def fibonacci_memo(n: int, memo: Dict[int, int] = {}) -> int:
     That allows to not explicitly return memo in the function.
     More info: https://www.geeksforgeeks.org/is-python-call-by-reference-or-call-by-value/
 
-    Time: O(n) we don't need to go further into recursive stack if n is already in memo.
-    Space: O(n) maximum recursion depth is n.
+    Time Complexity:
+        O(n) we don't need to go further into recursive stack if n is already in memo.
+    Space Complexity:
+        O(n) maximum recursion depth is n.
     """
     if n == 0:
         return 0
@@ -56,13 +61,15 @@ def grid_traveler(m: int, n: int) -> int:
 
     Uses normal recursion.
 
-    Time: O(2^(m+n)) because we need to calculate all possible combination of row-column.
-    Space: O(m+n) because maximum recursion depth is m+n
-
     Example:
         grid_traveler(2,3) returns 3.
         grid_traveler(1,1) returns 0.
         grid_traveler(3,3) returns 6.
+
+    Time Complexity:
+        O(2^(m+n)) because we need to calculate all possible combination of row-column.
+    Space Complexity:
+        O(m+n) because maximum recursion depth is m+n
     """
     if m <= 0 or n <= 0:
         return 0
@@ -80,8 +87,10 @@ def grid_traveler_memo(m: int, n: int, memo: Dict[str, int] = {}) -> int:
 
     Uses dynamic programming memoization.
 
-    Time: O(m*n) still not sure why.
-    Space: O(m+n) maximum recursion depth is is m+n
+    Time Complexity:
+        O(m*n) still not sure why.
+    Space Complexity:
+        O(m+n) maximum recursion depth is is m+n
     """
     key = f"{m},{n}"
 
@@ -98,7 +107,67 @@ def grid_traveler_memo(m: int, n: int, memo: Dict[str, int] = {}) -> int:
 
     return memo[key]
 
+def can_sum(target: int, options: List[int]) -> bool:
+    """
+    Is it possible to achieve 'target' by adding some number from `options`.
+    You may use a number from 'options' multiple times.
+
+    Example:
+        can_sum(target = 7,  options = [5,3,4,7]) returns True
+            3 + 4 = 7
+            4 + 3 = 7
+            7 = 7
+        can_sum(target = 7, options = [2,4]) returns False.
+            no possible addition in options that results in 7
+
+    Time Complexity:
+        O(m^n) where 'n' is target and 'm' is number of element in options.
+        Because max depth of the tree is n (worst case is subtracting 1 from 'n' each time),
+        and in each recursion we try all `options`.
+    Space Complexity:
+        O(n) where 'n' is target.
+        Because max depth of the tree is n (worst case is subtracting 1 from 'n' each time),
+    """
+    cannot_be_subtracted = all(target < x for x in options)
+
+    if target == 0:
+        return True
+    elif target != 0 and cannot_be_subtracted:
+        return False
+
+    # Test all possible combination of `options`
+    results = []
+    for option in options:
+        if option <= target:
+            results.append(can_sum(target - option, options))
+
+    print(f"target: {target}; options: {options}; results: {results};")
+    return any(x for x in results)
+
+def can_sum_memo(target: int, options: List[int], memo: Dict[str, bool]) -> bool:
+    cannot_be_subtracted = all(target < x for x in options)
+    key = f"{target};{','.join([str(x) for x in options])}"
+
+    if key in memo:
+        return memo[key]
+    elif target == 0:
+        return True
+    elif target != 0 and cannot_be_subtracted:
+        return
+
+    results = []
+    for option in options:
+        if option >= target:
+            results.append(can_sum(target - option, options, memo))
+
+    memo[key] = any(x for x in results)
+    print(f"target: {target}; options: {options}; results: {results}; memo: {memo};")
+    return any(x for x in results)
+
+
 if __name__ == '__main__':
     # print(fibonacci_memo(5))
-    print(grid_traveler_memo(18,18))
+    # print(grid_traveler_memo(18,18))
+    # print(can_sum_memo(300, [7,14], {}))
+    print(can_sum(300, [7,14]))
 
