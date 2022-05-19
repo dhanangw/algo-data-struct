@@ -1,4 +1,11 @@
-from typing import Dict, List
+"""From https://www.youtube.com/watch?v=oBt53YbR9Kk.
+
+Memoization guide:
+1. Draw the recursion tree
+2. 'Make it work'
+3. 'Make it fast'
+"""
+from typing import Dict, List, Optional
 
 
 def fibonacci(n: int) -> int:
@@ -164,10 +171,79 @@ def can_sum_memo(target: int, options: List[int], memo: Dict[str, bool]) -> bool
     print(f"target: {target}; options: {options}; results: {results}; memo: {memo};")
     return any(x for x in results)
 
+def how_sum(target: int, options: List[int]) -> Optional[List[int]]:
+    """Returns a list of integer containing any combination of elements of 'options' that add up to 'target'.
+
+    If there are multiple possible combinations, return any of them.
+    If there are no possible combinations, return empty list.
+
+    Example:
+        how_sum(7, [5,3,4,7]) returns [7].
+            another possible combination would be [3,4].
+        how_sum(8, [2,3,5]) returns [5,3].
+            another possible combination would be [2,2,2,2].
+        how_sum(7, [2,4]) returns [].
+
+    Time Complexity:
+        O(m^n) where m is 'target', and n is number of element in 'options'.
+        For the worst case, in every level of the tree, we will try every
+        element that is in 'options'.
+    Space Complexity:
+        If recursive calls is described as a tree, the height of the tree
+        is proporsional to 'target', and the maximum height of the tree
+        would be equal to 'target'.
+    """
+    cannot_be_subtracted = all(x > target for x in options)
+    if target == 0:
+        return []
+    elif target != 0 and cannot_be_subtracted:
+        return None
+
+    for option in options:
+        if option <= target:
+            temp = how_sum(target - option, options)
+            if isinstance(temp, list):
+                temp.append(option)
+                return temp
+
+    return None
+
+def how_sum_memo(target: int, options: List[int], memo: Dict[str, Optional[List[int]]]) -> Optional[List[int]]:
+    """Returns a list of integer containing any combination of elements of 'options' that add up to 'target'.
+
+    If there are multiple possible combinations, return any of them.
+    If there are no possible combinations, return empty list.
+
+    Uses memoization.
+
+    # TODO: determine time-space complexity here.
+    Time Complexity:
+    Space Complexity:
+    """
+    cannot_be_subtracted = all(x > target for x in options)
+    if target == 0:
+        return []
+    elif target != 0 and cannot_be_subtracted:
+        return None
+
+    for option in options:
+        if option <= target:
+            key = f"{target};{option}"
+            if key in memo:
+                return memo[key]
+
+            temp = how_sum_memo(target - option, options, memo)
+            memo[key] = temp
+            if isinstance(temp, list):
+                temp.append[option]
+                return temp
+
+    return None
+
 
 if __name__ == '__main__':
     # print(fibonacci_memo(5))
     # print(grid_traveler_memo(18,18))
     # print(can_sum_memo(300, [7,14], {}))
-    print(can_sum(300, [7,14]))
+    print(how_sum_memo(300, [7,14], {}))
 
