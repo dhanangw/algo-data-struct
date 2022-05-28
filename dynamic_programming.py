@@ -185,10 +185,11 @@ def how_sum(target: int, options: List[int]) -> Optional[List[int]]:
         how_sum(7, [2,4]) returns [].
 
     Time Complexity:
-        O(m^n) where m is 'target', and n is number of element in 'options'.
+        O(n^m) where m is 'target', and n is number of element in 'options'.
         For the worst case, in every level of the tree, we will try every
         element that is in 'options'.
     Space Complexity:
+        O(m) where m is 'target'.
         If recursive calls is described as a tree, the height of the tree
         is proporsional to 'target', and the maximum height of the tree
         would be equal to 'target'.
@@ -216,9 +217,10 @@ def how_sum_memo(target: int, options: List[int], memo: Dict[str, Optional[List[
 
     Uses memoization.
 
-    # TODO: determine time-space complexity here.
     Time Complexity:
+        O(n*m) where m is 'target', and n is number of element in 'options'.
     Space Complexity:
+        O(m^2) where m is 'target'.
     """
     cannot_be_subtracted = all(x > target for x in options)
     if target == 0:
@@ -240,10 +242,84 @@ def how_sum_memo(target: int, options: List[int], memo: Dict[str, Optional[List[
 
     return None
 
+def best_sum(target: int, options: List[int]) -> Optional[List[int]]:
+    """Return a list of integer containing the shortest combination of elements of 'options' to add up to 'target'.
+
+    The combination should be the shortest out of all possible combination.
+    If there is a tie for the shortest combination, return any of them.
+
+    Same problem as best_sum() but uses solution from the video.
+
+    Examples:
+        best_sum(7, [5,3,4,7]) returns [7].
+            The possible combinations are:
+                - [3,4]
+                - [7]
+            [7] is the shortest one.
+        best_sum(8, [2,3,5]) returns [3,5].
+            The possiblle combinations are:
+                - [2,2,2,2]
+                - [2,3,3]
+                - [3,5]
+            [3,5] is the shortest one.
+        best_sum(100, [1,2,5,25]) returns [25,25,25,25]
+    Time Complexity:
+        O(n^m) where m is 'target' and n is number of elements in 'options'.
+    Space Complexity:
+        O(m^2) where m is 'target' and n is number of elements in 'options'.
+    """
+    if target == 0:
+        return []
+    elif target < 0:
+        return None
+
+    shortest_combination = None
+    for option in options:
+        current_combination = best_sum(target - option, options)
+        if isinstance(current_combination, list):
+            current_combination = current_combination + [option]
+
+            if not shortest_combination or (shortest_combination and len(current_combination) < len(shortest_combination)):
+                shortest_combination = current_combination
+
+    return shortest_combination
+
+def best_sum_memo(target: int, options: List[int], memo: Dict[int, Optional[List[int]]]) -> Optional[List[int]]:
+    """Return a list of integer containing the shortest combination of elements of 'options' to add up to 'target'.
+
+    The combination should be the shortest out of all possible combination.
+    If there is a tie for the shortest combination, return any of them.
+
+    Same problem as best_sum() but uses solution from the video.
+
+    Time Complexity:
+        O(n * m^2) where m is 'target' and n is number of elements in 'options'.
+    Space Complexity:
+        O(m^2) where m is 'target' and n is number of elements in 'options'.
+    """
+    if target in memo:
+        return memo[target]
+    if target == 0:
+        return []
+    elif target < 0:
+        return None
+
+    shortest_combination = None
+    for option in options:
+        current_combination = best_sum_memo(target - option, options, memo)
+        if isinstance(current_combination, list):
+            current_combination = current_combination + [option]
+
+            if not shortest_combination or (shortest_combination and len(current_combination) < len(shortest_combination)):
+                shortest_combination = current_combination
+
+    memo[target] = shortest_combination
+    return shortest_combination
 
 if __name__ == '__main__':
     # print(fibonacci_memo(5))
     # print(grid_traveler_memo(18,18))
     # print(can_sum_memo(300, [7,14], {}))
-    print(how_sum_memo(300, [7,14], {}))
-
+    # print(how_sum_memo(300, [7,14], {}))
+    # print(best_sum(10, [2,5]))
+    # print(best_sum_memo(100, [1,2,5,25], {}))
