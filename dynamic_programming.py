@@ -277,6 +277,7 @@ def best_sum(target: int, options: List[int]) -> Optional[List[int]]:
     for option in options:
         current_combination = best_sum(target - option, options)
         if isinstance(current_combination, list):
+            # reassign current_combination to not append solution of previous option.
             current_combination = current_combination + [option]
 
             if not shortest_combination or (shortest_combination and len(current_combination) < len(shortest_combination)):
@@ -308,6 +309,7 @@ def best_sum_memo(target: int, options: List[int], memo: Dict[int, Optional[List
     for option in options:
         current_combination = best_sum_memo(target - option, options, memo)
         if isinstance(current_combination, list):
+            # reassign current_combination to not append solution of previous option.
             current_combination = current_combination + [option]
 
             if not shortest_combination or (shortest_combination and len(current_combination) < len(shortest_combination)):
@@ -316,6 +318,74 @@ def best_sum_memo(target: int, options: List[int], memo: Dict[int, Optional[List
     memo[target] = shortest_combination
     return shortest_combination
 
+def can_construct(target: str, word_bank: List[str]) -> bool:
+    """Determines whether 'target' can be constructed by concatenating elements from 'word_bank'.
+
+    You may use an element of 'word_bank' multiple times.
+
+    my own solution, different from the video.
+
+    Examples:
+        can_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']) returns True.
+            because 'abc' + 'def' = 'abcdef'.
+        can_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']) returns False.
+            no elements in 'word_bank' can construct target.
+        can_construct('', ['cat', 'dog', 'mouse']) returns True.
+
+    Time Complexity:
+        O(n^m) m = len(target), n = len(word_bank)
+    Space complexity:
+        O(m) m = len(target)
+    """
+    if not target:
+        return True
+    elif all([word not in target for word in word_bank]):
+        return False
+
+    for word in word_bank:
+        if word in target and target.startswith(word):
+            word_result = can_construct(target.replace(word, ''), word_bank)
+            if word_result:
+                return True
+
+    return False
+
+def can_construct_memo(target: str, word_bank: List[str], memo: Dict[str, bool]) -> bool:
+    """Determines whether 'target' can be constructed by concatenating elements from 'word_bank'.
+
+    You may use an element of 'word_bank' multiple times.
+
+    my own solution, different from the video.
+
+    Examples:
+        can_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']) returns True.
+            because 'abc' + 'def' = 'abcdef'.
+        can_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']) returns False.
+            no elements in 'word_bank' can construct target.
+        can_construct('', ['cat', 'dog', 'mouse']) returns True.
+
+    Time Complexity:
+        O(n^m) m = len(target), n = len(word_bank)
+    Space complexity:
+        O(m) m = len(target)
+    """
+    if target in memo:
+        return memo[target]
+    elif not target:
+        return True
+    elif all([word not in target for word in word_bank]):
+        return False
+
+    for word in word_bank:
+        if word in target and target.startswith(word):
+            subtracted_target = target.replace(word, '')
+            word_result = can_construct_memo(subtracted_target, word_bank, memo)
+            memo[subtracted_target] = word_result
+            if word_result:
+                return True
+
+    return False
+
 if __name__ == '__main__':
     # print(fibonacci_memo(5))
     # print(grid_traveler_memo(18,18))
@@ -323,3 +393,10 @@ if __name__ == '__main__':
     # print(how_sum_memo(300, [7,14], {}))
     # print(best_sum(10, [2,5]))
     # print(best_sum_memo(100, [1,2,5,25], {}))
+    print(can_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']))
+    print(can_construct('', ['cat', 'dog', 'mouse']))
+    print(can_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
+
+    print(can_construct_memo('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd'], {}))
+    print(can_construct_memo('', ['cat', 'dog', 'mouse'], {}))
+    print(can_construct_memo('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar'], {}))
