@@ -369,6 +369,10 @@ def can_construct_memo(target: str, word_bank: List[str], memo: Dict[str, bool])
     Space complexity:
         O(m) m = len(target)
     """
+    print("================================================")
+    print(f"memo: {memo}")
+    print(f"word_bank: {word_bank}")
+    print(f"target: {target}")
     if target in memo:
         return memo[target]
     elif not target:
@@ -377,6 +381,7 @@ def can_construct_memo(target: str, word_bank: List[str], memo: Dict[str, bool])
         return False
 
     for word in word_bank:
+        print(f"word: {word}")
         if word in target and target.startswith(word):
             subtracted_target = target.replace(word, '')
             word_result = can_construct_memo(subtracted_target, word_bank, memo)
@@ -384,6 +389,7 @@ def can_construct_memo(target: str, word_bank: List[str], memo: Dict[str, bool])
             if word_result:
                 return True
 
+    memo[target] = False
     return False
 
 if __name__ == '__main__':
@@ -393,10 +399,10 @@ if __name__ == '__main__':
     # print(how_sum_memo(300, [7,14], {}))
     # print(best_sum(10, [2,5]))
     # print(best_sum_memo(100, [1,2,5,25], {}))
-    print(can_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']))
-    print(can_construct('', ['cat', 'dog', 'mouse']))
-    print(can_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
+    # print(can_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']))
+    # print(can_construct('', ['cat', 'dog', 'mouse']))
+    # print(can_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
 
-    print(can_construct_memo('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd'], {}))
-    print(can_construct_memo('', ['cat', 'dog', 'mouse'], {}))
+    # print(can_construct_memo('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd'], {}))
+    # print(can_construct_memo('', ['cat', 'dog', 'mouse'], {}))
     print(can_construct_memo('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar'], {}))
