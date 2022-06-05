@@ -5,7 +5,7 @@ Memoization guide:
 2. 'Make it work'
 3. 'Make it fast'
 """
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 
 def fibonacci(n: int) -> int:
@@ -387,6 +387,62 @@ def can_construct_memo(target: str, word_bank: List[str], memo: Dict[str, bool])
     memo[target] = False
     return False
 
+def count_construct(target: str, word_bank: List[str]) -> int:
+    """Return number of ways 'target' can be constructed by concatenating elements of 'word_bank'.
+
+    You may use an element of 'word_bank' multiple times.
+
+    Example:
+        count_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']) returns 1.
+            because there is only 1 possible combination: 'abc' + 'def' = 'abcdef'.
+        count_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']) returns 2.
+        count_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']) returns 0.
+        count_construct('enterapotentpot', ['a', 'p', 'ent', 'enter', 'ot', 'o', 't']) returns 4.
+        count_construct('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']) returns 0.
+    """
+    if not target:
+        return 1
+    elif target and all([not target.startswith(word) for word in word_bank]):
+        return 0
+
+    results = 0
+    for word in word_bank:
+        if word in target and target.startswith(word):
+            results += count_construct(target.replace(word, '', 1), word_bank)
+
+    return results
+
+def count_construct_memo(target: str, word_bank: List[str], memo: Dict[str, int]) -> int:
+    """Return number of ways 'target' can be constructed by concatenating elements of 'word_bank'.
+
+    You may use an element of 'word_bank' multiple times.
+
+    Example:
+        count_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']) returns 1.
+            There is only 1 possible combination: 'abc' + 'def' = 'abcdef'.
+        count_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']) returns 2.
+            There are 2 combinations:
+                - purp + le
+                - p + ur + p + le
+        count_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']) returns 0.
+        count_construct('enterapotentpot', ['a', 'p', 'ent', 'enter', 'ot', 'o', 't']) returns 4.
+        count_construct('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']) returns 0.
+    """
+    if target in memo:
+        return memo[target]
+    elif not target:
+        return 1
+    elif target and all([not target.startswith(word) for word in word_bank]):
+        return 0
+
+    results = 0
+    for word in word_bank:
+        if target.startswith(word):
+            results += count_construct_memo(target.replace(word, '', 1), word_bank, memo)
+
+    memo[target] = results
+    return results
+
 if __name__ == '__main__':
     # print(fibonacci_memo(5))
     # print(grid_traveler_memo(18,18))
@@ -394,10 +450,16 @@ if __name__ == '__main__':
     # print(how_sum_memo(300, [7,14], {}))
     # print(best_sum(10, [2,5]))
     # print(best_sum_memo(100, [1,2,5,25], {}))
-    # print(can_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']))
-    # print(can_construct('', ['cat', 'dog', 'mouse']))
     # print(can_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
+    # print(can_construct_memo('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar'], {}))
+    # print(count_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']))
+    # print(count_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']))
+    # print(count_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
+    # print(count_construct('enterapotentpot', ['a', 'p', 'ent', 'enter', 'ot', 'o', 't']))
+    # print(count_construct('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']))
+    print(count_construct_memo('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd'], {}))
+    print(count_construct_memo('purple', ['purp', 'p', 'ur', 'le', 'purpl'], {}))
+    print(count_construct_memo('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar'], {}))
+    print(count_construct_memo('enterapotentpot', ['a', 'p', 'ent', 'enter', 'ot', 'o', 't'], {}))
+    print(count_construct_memo('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee'], {}))
 
-    # print(can_construct_memo('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd'], {}))
-    # print(can_construct_memo('', ['cat', 'dog', 'mouse'], {}))
-    print(can_construct_memo('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar'], {}))
