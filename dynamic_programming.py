@@ -365,14 +365,10 @@ def can_construct_memo(target: str, word_bank: List[str], memo: Dict[str, bool])
         can_construct('', ['cat', 'dog', 'mouse']) returns True.
 
     Time Complexity:
-        O(n^m) m = len(target), n = len(word_bank)
+        O(n*m) m = len(target), n = len(word_bank)
     Space complexity:
         O(m) m = len(target)
     """
-    print("================================================")
-    print(f"memo: {memo}")
-    print(f"word_bank: {word_bank}")
-    print(f"target: {target}")
     if target in memo:
         return memo[target]
     elif not target:
@@ -381,7 +377,6 @@ def can_construct_memo(target: str, word_bank: List[str], memo: Dict[str, bool])
         return False
 
     for word in word_bank:
-        print(f"word: {word}")
         if word in target and target.startswith(word):
             subtracted_target = target.replace(word, '')
             word_result = can_construct_memo(subtracted_target, word_bank, memo)
