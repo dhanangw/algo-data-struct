@@ -399,6 +399,11 @@ def count_construct(target: str, word_bank: List[str]) -> int:
         count_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']) returns 0.
         count_construct('enterapotentpot', ['a', 'p', 'ent', 'enter', 'ot', 'o', 't']) returns 4.
         count_construct('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']) returns 0.
+
+    Time complexity:
+        O(n^m) n = len(word_bank) m = len(target)
+    Space complexity:
+        O(m) m = len(target)
     """
     if not target:
         return 1
@@ -427,6 +432,11 @@ def count_construct_memo(target: str, word_bank: List[str], memo: Dict[str, int]
         count_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']) returns 0.
         count_construct('enterapotentpot', ['a', 'p', 'ent', 'enter', 'ot', 'o', 't']) returns 4.
         count_construct('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']) returns 0.
+
+    Time complexity:
+        O(n*m) n = len(word_bank) m = len(target)
+    Space complexity:
+        O(m) m = len(target)
     """
     if target in memo:
         return memo[target]
@@ -443,6 +453,93 @@ def count_construct_memo(target: str, word_bank: List[str], memo: Dict[str, int]
     memo[target] = results
     return results
 
+def all_construct(target: str, word_bank: List[str]) -> Optional[List[List[str]]]:
+    """Return a 2D array containing all of the ways that 'target' can be constructed by concatenating elements of 'word_bank'.
+
+    Each element of the 2D array represent one possible combination.
+    You may use element of 'word_bank' multiple times.
+
+    Example:
+        all_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']) returns
+        [
+            ['purpl', 'e'],
+            ['p', 'ur', 'p', 'le']
+        ]
+        all_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd', 'ef', 'c']) returns
+        [
+            ['ab', 'cd', 'ef'],
+            ['ab', 'c', 'def'],
+            ['abc', 'def'],
+            ['abcd', 'ef'],
+        ]
+        all_construct('hello', ['cat', 'dog', 'mouse']) returns []
+        all_construct('', ['cat', 'dog', 'mouse']) returns [[]]
+            because there is one way: concatenate nothing from word_bank.
+    """
+    if not target:
+        return [[]]
+    elif target and all([not target.startswith(word) for word in word_bank]):
+        return None
+
+    total_result = []
+    for word in word_bank:
+        if target.startswith(word):
+            subtracted_word = target.replace(word, '', 1)
+            word_results = all_construct(subtracted_word, word_bank)
+            if isinstance(word_results, list):
+                # prepend word in each word_result
+                for word_result in word_results:
+                    word_result.insert(0, word)
+                total_result += word_results
+
+    return total_result
+
+def all_construct_memo(target: str, word_bank: List[str], memo: Dict[str, Optional[List[List[str]]]]) -> Optional[List[List[str]]]:
+    """Return a 2D array containing all of the ways that 'target' can be constructed by concatenating elements of 'word_bank'.
+
+    Each element of the 2D array represent one possible combination.
+    You may use element of 'word_bank' multiple times.
+
+    Optimised with memoisation.
+
+    Example:
+        all_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']) returns
+        [
+            ['purpl', 'e'],
+            ['p', 'ur', 'p', 'le']
+        ]
+        all_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd', 'ef', 'c']) returns
+        [
+            ['ab', 'cd', 'ef'],
+            ['ab', 'c', 'def'],
+            ['abc', 'def'],
+            ['abcd', 'ef'],
+        ]
+        all_construct('hello', ['cat', 'dog', 'mouse']) returns []
+        all_construct('', ['cat', 'dog', 'mouse']) returns [[]]
+            because there is one way: concatenate nothing from word_bank.
+    """
+    if target in memo:
+        return memo[target]
+    elif not target:
+        return [[]]
+    elif target and all([not target.startswith(word) for word in word_bank]):
+        return None
+
+    total_result = []
+    for word in word_bank:
+        if target.startswith(word):
+            subtracted_word = target.replace(word, '', 1)
+            word_results = all_construct(subtracted_word, word_bank)
+            if isinstance(word_results, list):
+                # prepend word in each word_result
+                for word_result in word_results:
+                    word_result.insert(0, word)
+                total_result += word_results
+
+    memo[target] = total_result
+    return total_result
+
 if __name__ == '__main__':
     # print(fibonacci_memo(5))
     # print(grid_traveler_memo(18,18))
@@ -452,14 +549,10 @@ if __name__ == '__main__':
     # print(best_sum_memo(100, [1,2,5,25], {}))
     # print(can_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
     # print(can_construct_memo('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar'], {}))
-    # print(count_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']))
-    # print(count_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']))
-    # print(count_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
-    # print(count_construct('enterapotentpot', ['a', 'p', 'ent', 'enter', 'ot', 'o', 't']))
     # print(count_construct('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']))
-    print(count_construct_memo('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd'], {}))
-    print(count_construct_memo('purple', ['purp', 'p', 'ur', 'le', 'purpl'], {}))
-    print(count_construct_memo('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar'], {}))
-    print(count_construct_memo('enterapotentpot', ['a', 'p', 'ent', 'enter', 'ot', 'o', 't'], {}))
-    print(count_construct_memo('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee'], {}))
+    # print(count_construct_memo('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee'], {}))
+    print(all_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']))
+    print(all_construct('', ['cat', 'dog', 'mouse']))
+    print(all_construct_memo('purple', ['purp', 'p', 'ur', 'le', 'purpl'], {}))
+    print(all_construct_memo('', ['cat', 'dog', 'mouse'], {}))
 
