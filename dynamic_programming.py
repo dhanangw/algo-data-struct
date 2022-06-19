@@ -2,8 +2,16 @@
 
 Memoization guide:
 1. Draw the recursion tree
-2. 'Make it work'
-3. 'Make it fast'
+2. Implement the brute force solution ('Make it work')
+3. Apply memoization to it ('Make it fast')
+
+Tabulation guide:
+1. Visualise the problem as a table.
+2. Size the table according to input (add 1 to table size to not get off by 1 error).
+3. Initialise the table with default values. data type of default values follows data type of function's return value.
+4. Seed the trivial answer to the table (trivial answers == base cases).
+5. Iterate through the table.
+6. Fill further positions based on the current position.
 """
 from typing import Dict, List, Optional, Tuple
 
@@ -153,9 +161,9 @@ def grid_traveler_tab(m: int, n: int) -> int:
     Uses dynamic programming tabulation.
 
     Time Complexity:
-        O(m*n) still not sure why.
+        O(m*n)
     Space Complexity:
-        O(m+n) maximum recursion depth is is m+n
+        O(m*n)
     """
     # initiate table (for 2D array, use https://stackoverflow.com/a/44382900)
     table = [[0] * (n + 1) for i in range(m + 1)]
@@ -231,6 +239,41 @@ def can_sum_memo(target: int, options: List[int], memo: Dict[str, bool]) -> bool
     memo[key] = any(x for x in results)
     print(f"target: {target}; options: {options}; results: {results}; memo: {memo};")
     return any(x for x in results)
+
+def can_sum_tab(target: int, options: List[int]) -> bool:
+    """
+    Is it possible to achieve 'target' by adding some number from `options`.
+    You may use a number from 'options' multiple times.
+
+    Example:
+        can_sum(target = 7,  options = [5,3,4,7]) returns True
+            3 + 4 = 7
+            4 + 3 = 7
+            7 = 7
+        can_sum(target = 7, options = [2,4]) returns False.
+            no possible addition in options that results in 7
+
+    Uses dynamic programming tabulation
+
+    Time Complexity:
+        O(m^n) where m is `target` and n is len(`options`)
+    Space Complexity:
+        O(m) where m is `target`
+    """
+    # initialise table
+    table = [False] * (target + 1)
+
+    # apply base cases to table
+    table[0] = True
+
+    # iterate through table
+    for index, value in enumerate(table):
+        for option in options:
+            look_ahead_index = index + option
+            if value and look_ahead_index <= target:
+                table[index + option] = True
+
+    return table[target]
 
 def how_sum(target: int, options: List[int]) -> Optional[List[int]]:
     """Returns a list of integer containing any combination of elements of 'options' that add up to 'target'.
@@ -605,10 +648,12 @@ if __name__ == '__main__':
     # print(fibonacci_memo(5))
     # print(fibonacci_tab(5))
 
-    print(grid_traveler_memo(18,18))
-    print(grid_traveler_tab(18,18))
+    # print(grid_traveler_memo(18,18))
+    # print(grid_traveler_tab(18,18))
 
-    # print(can_sum_memo(300, [7,14], {}))
+    print(can_sum_memo(300, [7,14], {}))
+    print(can_sum_tab(300, [7,14]))
+
     # print(how_sum_memo(300, [7,14], {}))
     # print(best_sum(10, [2,5]))
     # print(best_sum_memo(100, [1,2,5,25], {}))
