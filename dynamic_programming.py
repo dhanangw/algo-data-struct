@@ -62,6 +62,38 @@ def fibonacci_memo(n: int, memo: Dict[int, int] = {}) -> int:
 
     return memo[n]
 
+def fibonacci_tab(n: int) -> int:
+    """Returns n-th fibonacci number.
+
+    Uses dynamic programming tabulation.
+
+    Time Complexity:
+        O(n) we don't need to go further into recursive stack if n is already in memo.
+    Space Complexity:
+        O(n) maximum recursion depth is n.
+    """
+    # create table
+    table = [0] * (n + 1)
+
+    # apply base case to table
+    table[0] = 0
+    table[1] = 1
+
+    # iterate through table
+    for index, value in  enumerate(table):
+        try:
+            table[index + 1] += value
+        except IndexError:
+            pass
+
+        try:
+            table[index + 2] += value
+        except IndexError:
+            pass
+
+    return table[n]
+
+
 def grid_traveler(m: int, n: int) -> int:
     """Given m*n grid, return number of possible way to traverse the grid from top-left cell to bottom-right cell.
     You can only move downward or rightward.
@@ -541,7 +573,9 @@ def all_construct_memo(target: str, word_bank: List[str], memo: Dict[str, Option
     return total_result
 
 if __name__ == '__main__':
-    # print(fibonacci_memo(5))
+    print(fibonacci_memo(5))
+    print(fibonacci_tab(5))
+
     # print(grid_traveler_memo(18,18))
     # print(can_sum_memo(300, [7,14], {}))
     # print(how_sum_memo(300, [7,14], {}))
@@ -551,8 +585,8 @@ if __name__ == '__main__':
     # print(can_construct_memo('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar'], {}))
     # print(count_construct('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']))
     # print(count_construct_memo('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee'], {}))
-    print(all_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']))
-    print(all_construct('', ['cat', 'dog', 'mouse']))
-    print(all_construct_memo('purple', ['purp', 'p', 'ur', 'le', 'purpl'], {}))
-    print(all_construct_memo('', ['cat', 'dog', 'mouse'], {}))
+    # print(all_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']))
+    # print(all_construct('', ['cat', 'dog', 'mouse']))
+    # print(all_construct_memo('purple', ['purp', 'p', 'ur', 'le', 'purpl'], {}))
+    # print(all_construct_memo('', ['cat', 'dog', 'mouse'], {}))
 
