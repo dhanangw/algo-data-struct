@@ -68,9 +68,9 @@ def fibonacci_tab(n: int) -> int:
     Uses dynamic programming tabulation.
 
     Time Complexity:
-        O(n) we don't need to go further into recursive stack if n is already in memo.
+        O(n)
     Space Complexity:
-        O(n) maximum recursion depth is n.
+        O(n)
     """
     # create table
     table = [0] * (n + 1)
@@ -145,6 +145,35 @@ def grid_traveler_memo(m: int, n: int, memo: Dict[str, int] = {}) -> int:
     memo[key] = move_down_result + move_right_result
 
     return memo[key]
+
+def grid_traveler_tab(m: int, n: int) -> int:
+    """Given m*n grid, return number of possible way to traverse the grid from top-left cell to bottom-right cell.
+    You can only move downward or rightward.
+
+    Uses dynamic programming tabulation.
+
+    Time Complexity:
+        O(m*n) still not sure why.
+    Space Complexity:
+        O(m+n) maximum recursion depth is is m+n
+    """
+    # initiate table (for 2D array, use https://stackoverflow.com/a/44382900)
+    table = [[0] * (n + 1) for i in range(m + 1)]
+
+    # apply base case to table
+    table[1][1] = 1
+
+    # iterate through table 
+    for row_index, row in enumerate(table):
+        for column_index, cell_value in enumerate(row):
+            if column_index + 1 <= n:
+                table[row_index][column_index + 1] += cell_value
+
+            if row_index + 1 <= m:
+                table[row_index + 1][column_index] += cell_value
+
+    return table[m][n]
+
 
 def can_sum(target: int, options: List[int]) -> bool:
     """
@@ -573,10 +602,12 @@ def all_construct_memo(target: str, word_bank: List[str], memo: Dict[str, Option
     return total_result
 
 if __name__ == '__main__':
-    print(fibonacci_memo(5))
-    print(fibonacci_tab(5))
+    # print(fibonacci_memo(5))
+    # print(fibonacci_tab(5))
 
-    # print(grid_traveler_memo(18,18))
+    print(grid_traveler_memo(18,18))
+    print(grid_traveler_tab(18,18))
+
     # print(can_sum_memo(300, [7,14], {}))
     # print(how_sum_memo(300, [7,14], {}))
     # print(best_sum(10, [2,5]))
