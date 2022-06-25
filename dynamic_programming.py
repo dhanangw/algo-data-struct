@@ -7,8 +7,10 @@ Memoization guide:
 
 Tabulation guide:
 1. Visualise the problem as a table.
-2. Size the table according to input (add 1 to table size to not get off by 1 error).
+2. Size the table according to input (add 1 to table size to not get "off by 1" error).
+2.a. each cell in the table is a sub-problem of the original problem.
 3. Initialise the table with default values. data type of default values follows data type of function's return value.
+3.a. Value of table is what you're trying to optimise.
 4. Seed the trivial answer to the table (trivial answers == base cases).
 5. Iterate through the table.
 6. Fill further positions based on the current position.
@@ -287,6 +289,7 @@ def how_sum(target: int, options: List[int]) -> Optional[List[int]]:
         how_sum(8, [2,3,5]) returns [5,3].
             another possible combination would be [2,2,2,2].
         how_sum(7, [2,4]) returns [].
+        how_sum(300, [7,14]) returns [].
 
     Time Complexity:
         O(n^m) where m is 'target', and n is number of element in 'options'.
@@ -341,10 +344,37 @@ def how_sum_memo(target: int, options: List[int], memo: Dict[str, Optional[List[
             temp = how_sum_memo(target - option, options, memo)
             memo[key] = temp
             if isinstance(temp, list):
-                temp.append[option]
+                temp.append(option)
                 return temp
 
     return None
+
+def how_sum_tab(target: int, options: List[int]) -> Optional[List[int]]:
+    """Returns a list of integer containing any combination of elements of 'options' that add up to 'target'.
+
+    If there are multiple possible combinations, return any of them.
+    If there are no possible combinations, return empty list.
+
+    Uses tabulation.
+
+    Time Complexity:
+        O(m * n) where m = target and n= len(options)
+    Space Complexity:
+        O(m^2) where m is target
+    """
+    table = [None] * (target + 1)
+
+    table[0] = []
+
+    for index, value in enumerate(table):
+        if isinstance(value, list):
+            for option in options:
+                next_index = index + option
+                if next_index <= target:
+                    table[next_index] = value + [option]
+
+    return table[target]
+
 
 def best_sum(target: int, options: List[int]) -> Optional[List[int]]:
     """Return a list of integer containing the shortest combination of elements of 'options' to add up to 'target'.
@@ -651,10 +681,12 @@ if __name__ == '__main__':
     # print(grid_traveler_memo(18,18))
     # print(grid_traveler_tab(18,18))
 
-    print(can_sum_memo(300, [7,14], {}))
-    print(can_sum_tab(300, [7,14]))
+    # print(can_sum_memo(300, [7,14], {}))
+    # print(can_sum_tab(300, [7,14]))
 
-    # print(how_sum_memo(300, [7,14], {}))
+    print(how_sum_memo(300, [7,14], {}))
+    print(how_sum_tab(300, [7,14]))
+
     # print(best_sum(10, [2,5]))
     # print(best_sum_memo(100, [1,2,5,25], {}))
     # print(can_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
