@@ -452,6 +452,35 @@ def best_sum_memo(target: int, options: List[int], memo: Dict[int, Optional[List
     memo[target] = shortest_combination
     return shortest_combination
 
+def best_sum_tab(target: int, options: List[int]) -> Optional[List[int]]:
+    """Return a list of integer containing the shortest combination of elements of 'options' to add up to 'target'.
+
+    The combination should be the shortest out of all possible combination.
+    If there is a tie for the shortest combination, return any of them.
+
+    Uses dynamic programming tabulation
+
+    Time Complexity:
+        O(m*n) where m is 'target' and n is 'len(options)'
+    Space Complexity:
+        O(m^2) where m is 'target'
+    """
+    table_size = target + 1
+    table = [None] * table_size
+
+    table[0] = []
+
+    for index, value in enumerate(table):
+        if isinstance(value, list):
+            for option in options:
+                next_index = index + option
+                next_value = value + [option]
+
+                if next_index <= target and (not table[next_index] or len(table[next_index]) > len(next_value)):
+                    table[next_index] = next_value
+
+    return table[target]
+
 def can_construct(target: str, word_bank: List[str]) -> bool:
     """Determines whether 'target' can be constructed by concatenating elements from 'word_bank'.
 
@@ -684,11 +713,12 @@ if __name__ == '__main__':
     # print(can_sum_memo(300, [7,14], {}))
     # print(can_sum_tab(300, [7,14]))
 
-    print(how_sum_memo(300, [7,14], {}))
-    print(how_sum_tab(300, [7,14]))
+    # print(how_sum_memo(300, [7,14], {}))
+    # print(how_sum_tab(300, [7,14]))
 
-    # print(best_sum(10, [2,5]))
-    # print(best_sum_memo(100, [1,2,5,25], {}))
+    print(best_sum_memo(100, [1,2,5,25], {}))
+    print(best_sum_tab(100, [1,2,5,25]))
+
     # print(can_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
     # print(can_construct_memo('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar'], {}))
     # print(count_construct('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']))
