@@ -11,7 +11,8 @@ Tabulation guide:
 2.a. each cell in the table is a sub-problem of the original problem.
 3. Initialise the table with default values. data type of default values follows data type of function's return value.
 3.a. Value of table is what you're trying to optimise.
-4. Seed the trivial answer to the table (trivial answers == base cases).
+4. Seed the trivial answer to the table
+4.a trivial answers == base cases.
 5. Iterate through the table.
 6. Fill further positions based on the current position.
 """
@@ -550,6 +551,37 @@ def can_construct_memo(target: str, word_bank: List[str], memo: Dict[str, bool])
     memo[target] = False
     return False
 
+def can_construct_tab(target: str, word_bank: List[str]) -> bool:
+    """Determines whether 'target' can be constructed by concatenating elements from 'word_bank'.
+
+    You may use an element of 'word_bank' multiple times.
+
+    Uses dynamic programming tabulation.
+
+    Examples:
+        can_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']) returns True.
+            because 'abc' + 'def' = 'abcdef'.
+        can_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']) returns False.
+            no elements in 'word_bank' can construct target.
+        can_construct('', ['cat', 'dog', 'mouse']) returns True.
+
+    Time Complexity:
+        O(m*n) where m is len(target) and n is len(word_bank)
+    Space complexity:
+        O(m) where m is len(target)
+    """
+    table = [False] * (len(target) + 1)
+
+    table[0] = True
+
+    for index, value in enumerate(table):
+        if value:
+            for word in word_bank:
+                if target[index:].startswith(word):
+                    table[index + len(word)] = True
+
+    return table[len(target)]
+
 def count_construct(target: str, word_bank: List[str]) -> int:
     """Return number of ways 'target' can be constructed by concatenating elements of 'word_bank'.
 
@@ -716,11 +748,13 @@ if __name__ == '__main__':
     # print(how_sum_memo(300, [7,14], {}))
     # print(how_sum_tab(300, [7,14]))
 
-    print(best_sum_memo(100, [1,2,5,25], {}))
-    print(best_sum_tab(100, [1,2,5,25]))
+    # print(best_sum_memo(100, [1,2,5,25], {}))
+    # print(best_sum_tab(100, [1,2,5,25]))
 
     # print(can_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
-    # print(can_construct_memo('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar'], {}))
+    print(can_construct_memo('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar'], {}))
+    print(can_construct_tab('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
+
     # print(count_construct('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']))
     # print(count_construct_memo('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee'], {}))
     # print(all_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']))
