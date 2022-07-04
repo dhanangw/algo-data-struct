@@ -648,6 +648,44 @@ def count_construct_memo(target: str, word_bank: List[str], memo: Dict[str, int]
     memo[target] = results
     return results
 
+def count_construct_tab(target: str, word_bank: List[str]) -> int:
+    """Return number of ways 'target' can be constructed by concatenating elements of 'word_bank'.
+
+    You may use an element of 'word_bank' multiple times.
+    uses dynamic programming tabulation.
+
+    Example:
+        count_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']) returns 1.
+            There is only 1 possible combination: 'abc' + 'def' = 'abcdef'.
+        count_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']) returns 2.
+            There are 2 combinations:
+                - purp + le
+                - p + ur + p + le
+        count_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']) returns 0.
+        count_construct('enterapotentpot', ['a', 'p', 'ent', 'enter', 'ot', 'o', 't']) returns 4.
+        count_construct('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']) returns 0.
+
+    Time complexity:
+        O(m*n) where m is len(target) and n is len(word_bank)
+    Space complexity:
+        O(m) where m is len(target)
+    """
+    table_size = len(target) + 1
+    table = [0] * table_size
+
+    table[0] = 1
+
+    for table_index, table_value in enumerate(table):
+        if table_value > 0:
+            for word in word_bank:
+                next_index = table_index + len(word)
+                if target[table_index:].startswith(word) and next_index <= len(target):
+                    table[next_index] += 1
+
+    return table[len(target)]
+
+
+
 def all_construct(target: str, word_bank: List[str]) -> Optional[List[List[str]]]:
     """Return a 2D array containing all of the ways that 'target' can be constructed by concatenating elements of 'word_bank'.
 
@@ -752,11 +790,13 @@ if __name__ == '__main__':
     # print(best_sum_tab(100, [1,2,5,25]))
 
     # print(can_construct('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
-    print(can_construct_memo('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar'], {}))
-    print(can_construct_tab('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
+    # print(can_construct_memo('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar'], {}))
+    # print(can_construct_tab('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
 
     # print(count_construct('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']))
-    # print(count_construct_memo('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee'], {}))
+    print(count_construct_memo('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee'], {}))
+    print(count_construct_tab('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']))
+
     # print(all_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']))
     # print(all_construct('', ['cat', 'dog', 'mouse']))
     # print(all_construct_memo('purple', ['purp', 'p', 'ur', 'le', 'purpl'], {}))
