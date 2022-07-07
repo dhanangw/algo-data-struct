@@ -773,6 +773,51 @@ def all_construct_memo(target: str, word_bank: List[str], memo: Dict[str, Option
     memo[target] = total_result
     return total_result
 
+def all_construct_tab(target: str, word_bank: List[str]) -> Optional[List[List[str]]]:
+    """Return a 2D array containing all of the ways that 'target' can be constructed by concatenating elements of 'word_bank'.
+
+    Each element of the 2D array represent one possible combination.
+    You may use element of 'word_bank' multiple times.
+
+    Optimised with dynamic programming tabulation.
+
+    Example:
+        all_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']) returns
+        [
+            ['purpl', 'e'],
+            ['p', 'ur', 'p', 'le']
+        ]
+        all_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd', 'ef', 'c']) returns
+        [
+            ['ab', 'cd', 'ef'],
+            ['ab', 'c', 'def'],
+            ['abc', 'def'],
+            ['abcd', 'ef'],
+        ]
+        all_construct('hello', ['cat', 'dog', 'mouse']) returns []
+        all_construct('', ['cat', 'dog', 'mouse']) returns [[]]
+            because there is one way: concatenate nothing from word_bank.
+
+    Time Complexity:
+        O(m^n^2) where m is len(target) and n is len(word_bank)
+    Space Complexity:
+        O(m^n) where m is len(target) and n is len(word_bank)
+    """
+    table_size =  len(target) + 1
+    table = [[] for i in range(table_size)]
+
+    table[0] = [[]]
+
+    for table_index, table_value in enumerate(table):
+        if len(table_value) > 0:
+            for word in word_bank:
+                next_index = table_index + len(word)
+                if target[table_index:].startswith(word) and next_index <= len(target):
+                    table[next_index] += [combo + [word] for combo in table_value]
+
+    return table[len(target)]
+
+
 if __name__ == '__main__':
     # print(fibonacci_memo(5))
     # print(fibonacci_tab(5))
@@ -794,11 +839,12 @@ if __name__ == '__main__':
     # print(can_construct_tab('skateboard', ['bo', 'rd', 'ate', 't', 'ska', 'sk', 'boar']))
 
     # print(count_construct('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']))
-    print(count_construct_memo('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee'], {}))
-    print(count_construct_tab('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']))
+    # print(count_construct_memo('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee'], {}))
+    # print(count_construct_tab('eeeeeeeeeeeeeeeeeeeeeeef', ['e', 'ee', 'eee', 'eeee', 'eeeee', 'eeeeee']))
 
     # print(all_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl']))
     # print(all_construct('', ['cat', 'dog', 'mouse']))
     # print(all_construct_memo('purple', ['purp', 'p', 'ur', 'le', 'purpl'], {}))
     # print(all_construct_memo('', ['cat', 'dog', 'mouse'], {}))
+    print(all_construct_tab('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd', 'ef', 'c']))
 
